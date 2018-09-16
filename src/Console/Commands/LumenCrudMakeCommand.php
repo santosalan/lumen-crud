@@ -795,8 +795,8 @@ class LumenCrudMakeCommand extends Command
 
         // Paths type
         $paths = [
-            'controller' => app_path() . '/Http/Controllers/',
-            'model' => app_path() . '/' . implode('/',$pathModels),
+            'controller' => base_path('app') . '/Http/Controllers/',
+            'model' => base_path('app') . '/' . implode('/',$pathModels),
         ];
 
         // Name Arq

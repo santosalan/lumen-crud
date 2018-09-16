@@ -466,7 +466,7 @@ class LumenCrudMakeCommand extends Command
         $prepareValidators = function () use ($objTable) {
             $validators = '';
             foreach ($objTable->fields as $f) {
-                if (in_array($f->name, ['id', 'created_at', 'updated_at', 'remember_token'])){
+                if (in_array($f->name, ['id', 'created_at', 'updated_at', 'deleted_at', 'remember_token'])){
                     continue;
                 }
 
@@ -523,12 +523,25 @@ class LumenCrudMakeCommand extends Command
         };
         list($primary, $incrementing) = $preparePrimaryKey();
 
+        $prepareSoftDeletes = function () use ($objTable) {
+            $softDeletes = null;
+
+            foreach ($objTable->fields as $f) {
+                if (strtolower($f->name) === 'deleted_at') {
+                    $softDeletes = 'use Illuminate\Database\Eloquent\SoftDeletes;';
+                    break;   
+                }
+            }
+
+            return $softDeletes;
+        }
+
         // FILLABLES
         $prepareFillable = function () use ($objTable) {
             $fillable = null;
 
             foreach ($objTable->fields as $f) {
-                if (in_array(strtolower($f->name), ['id', 'created_at', 'updated_at'])) {
+                if (in_array(strtolower($f->name), ['id', 'created_at', 'updated_at', 'deleted_at'])) {
                     continue;
                 }
 
@@ -635,6 +648,7 @@ class LumenCrudMakeCommand extends Command
 
             // Model
             'namespace' => substr($this->pathModels,0,-1),
+            'soft_deletes' => $prepareSoftDeletes(),
             'primary_key' => $primary,
             'auto_increment' => $incrementing,
             'fillable' => $prepareFillable(),
@@ -673,6 +687,7 @@ class LumenCrudMakeCommand extends Command
                 'singular_uc',
                 'singular',
                 'namespace',
+                'soft_deletes',
                 'primary_key',
                 'auto_increment',
                 'fillable',

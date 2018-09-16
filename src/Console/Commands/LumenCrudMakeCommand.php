@@ -535,7 +535,7 @@ class LumenCrudMakeCommand extends Command
             }
 
             return $softDeletes;
-        }
+        };
         list($useSoftDeletes, $traitSoftDeletes) = $prepareSoftDeletes();
 
         // FILLABLES

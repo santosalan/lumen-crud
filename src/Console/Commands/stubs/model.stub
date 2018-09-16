@@ -4,10 +4,11 @@ namespace {{{namespace}}};
 
 
 use Illuminate\Database\Eloquent\Model;
-{{{soft_deletes}}}
+{{{use_soft_deletes}}}
 
 class {{{singular_uc}}} extends Model
 {
+    {{{trait_soft_deletes}}}
 
     /**
      * The table associated with the model.

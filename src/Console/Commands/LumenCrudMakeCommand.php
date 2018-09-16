@@ -524,17 +524,19 @@ class LumenCrudMakeCommand extends Command
         list($primary, $incrementing) = $preparePrimaryKey();
 
         $prepareSoftDeletes = function () use ($objTable) {
-            $softDeletes = null;
+            $softDeletes = [];
 
             foreach ($objTable->fields as $f) {
                 if (strtolower($f->name) === 'deleted_at') {
-                    $softDeletes = 'use Illuminate\Database\Eloquent\SoftDeletes;';
+                    $softDeletes['use'] = 'use Illuminate\Database\Eloquent\SoftDeletes;';
+                    $softDeletes['trait'] = 'use SoftDeletes;';
                     break;   
                 }
             }
 
             return $softDeletes;
         }
+        list($useSoftDeletes, $traitSoftDeletes) = $prepareSoftDeletes();
 
         // FILLABLES
         $prepareFillable = function () use ($objTable) {
@@ -648,7 +650,8 @@ class LumenCrudMakeCommand extends Command
 
             // Model
             'namespace' => substr($this->pathModels,0,-1),
-            'soft_deletes' => $prepareSoftDeletes(),
+            'use_soft_deletes' => $useSoftDeletes,
+            'trait_soft_deletes' => $traitSoftDeletes,
             'primary_key' => $primary,
             'auto_increment' => $incrementing,
             'fillable' => $prepareFillable(),
@@ -687,7 +690,8 @@ class LumenCrudMakeCommand extends Command
                 'singular_uc',
                 'singular',
                 'namespace',
-                'soft_deletes',
+                'use_soft_deletes',
+                'trait_soft_deletes',
                 'primary_key',
                 'auto_increment',
                 'fillable',

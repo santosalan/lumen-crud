@@ -1,4 +1,11 @@
 # santosalan/lumen-crud
+
+## Install with Composer
+> php composer.phar require santosalan/lumen-crud
+
+## Enable it in _bootstrap/app.php_
+> $app->register(SantosAlan\LumenCrud\ServiceProvider::class);
+
 ## See Tables
 > php artisan make:lumen-crud
 

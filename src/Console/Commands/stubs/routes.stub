@@ -1,0 +1,11 @@
+
+/**
+* {{{plural_uc}}}
+*/
+$router->group(['prefix' => '{{{plural}}}'], function () use ($router) {
+    $router->get('/', ['uses' => '{{{plural_uc}}}Controller@list']);
+    $router->post('create', ['uses' => '{{{plural_uc}}}Controller@create']);
+    $router->get('{id}', ['uses' => '{{{plural_uc}}}Controller@read']);
+    $router->put('{id}/update', ['uses' => '{{{plural_uc}}}Controller@update']);
+    $router->delete('{id}/delete', ['uses' => '{{{plural_uc}}}Controller@delete']);
+});

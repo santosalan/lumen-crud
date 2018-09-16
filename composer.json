@@ -1,0 +1,33 @@
+{
+    "name": "santosalan/lumen-crud",
+    "description": "Generate Lumen API CRUD",
+    "keywords": ["laravel", "lumen", "api", "crud", "admin", "administrator", "santosalan"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alan Santos",
+            "email": "alanssantos@outlook.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.1.3",
+        "illuminate/contracts": "~5.1",
+        "illuminate/http": "~5.1",
+        "illuminate/support": "~5.1",
+        "illuminate/database": "~5.1",
+        "laravel/lumen-framework": "^5.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "SantosAlan\\LumenCrud\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "SantosAlan\\LumenCrud\\ServiceProvider"
+            ]
+        }
+    }
+}

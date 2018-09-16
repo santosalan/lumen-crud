@@ -524,12 +524,14 @@ class LumenCrudMakeCommand extends Command
         list($primary, $incrementing) = $preparePrimaryKey();
 
         $prepareSoftDeletes = function () use ($objTable) {
-            $softDeletes = [];
+            $softDeletes = [null, null];
 
             foreach ($objTable->fields as $f) {
                 if (strtolower($f->name) === 'deleted_at') {
-                    $softDeletes['use'] = 'use Illuminate\Database\Eloquent\SoftDeletes;';
-                    $softDeletes['trait'] = 'use SoftDeletes;';
+                    $softDeletes = [
+                        'use Illuminate\Database\Eloquent\SoftDeletes;',
+                        'use SoftDeletes;',
+                    ];
                     break;   
                 }
             }

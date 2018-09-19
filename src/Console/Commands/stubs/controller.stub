@@ -84,7 +84,7 @@ class {{{plural_uc}}}Controller extends Controller
             $valid = $this->validator($request->all());
 
             if (!$valid->fails()){            
-                ${{{singular}}} = {{{plural_uc}}}::create($request->all());
+                ${{{singular}}} = {{{singular_uc}}}::create($request->all());
 
                 $response = response()->json([
                     'response'=> [

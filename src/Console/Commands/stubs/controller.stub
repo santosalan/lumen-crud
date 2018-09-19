@@ -56,9 +56,13 @@ class {{{plural_uc}}}Controller extends Controller
      *
      * @return json {{{plural}}}.list
      */
-    public function list()
+    public function list(Request $request)
     {
-        ${{{plural}}} = {{{singular_uc}}}::all();
+        $r = $request->all();
+
+        ${{{plural}}} = count($r) > 0
+                        ? {{{singular_uc}}}::filter($r)->get()
+                        : {{{singular_uc}}}::all();
 
         $response = response()->json([
             'response'=> [

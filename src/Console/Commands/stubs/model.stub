@@ -2,8 +2,7 @@
 
 namespace {{{namespace}}};
 
-
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Model;
 {{{use_soft_deletes}}}
 
 class {{{singular_uc}}} extends Model

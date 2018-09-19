@@ -771,6 +771,25 @@ class LumenCrudMakeCommand extends Command
     public function processFile(string $type) 
     {
         $this->alert(strtoupper($type) . ' PROCESS');
+
+        if ($type == 'model') {
+            // Make the table object
+            $objTab = new \stdClass();
+            $objTab->singular = 'model';
+            $objTab->marks = ['namespace' => substr($this->pathModels,0,-1)];
+            $objTab->arqs = [
+                $type => $this->getTemplate('baseModel'),
+            ];
+
+            foreach ($this->marks()[$type] as $mark){
+                $table->arqs[$type] = str_replace('{{{' . $mark . '}}}', 
+                                                        trim($table->marks[$mark]), 
+                                                        $table->arqs[$type]);
+            }
+
+            $this->createFile($type, $objTab);
+        }
+
         foreach ($this->tables as $key => $table) {
             if ($table->relationTable === true && $type !== 'pivot') {
                 continue;

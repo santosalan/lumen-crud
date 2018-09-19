@@ -1,0 +1,46 @@
+<?php
+
+namespace {{{namespace}}};
+
+use Illuminate\Database\Eloquent\Model as EloquentModel;
+
+class Model extends EloquentModel
+{
+
+    /**
+     * FILTER 
+     *
+     * @return object class
+     */
+    public static function filter(array $conditions)
+    {
+
+        $model = static::class;
+        $obj = new $model();
+
+        foreach ($conditions as $key => $condition) {
+
+            if (is_array($condition)) {
+                if (count($condition) == 1) {
+                    $obj = $obj->where($key, $condition[0]);
+                } elseif (count($condition) == 2) {
+                    $obj = $obj->where($key, $condition[0], $condition[1]);
+                } elseif (count($condition) == 3) {
+                    $obj = $obj->where($key, $condition[0], $condition[1], $condition[2]);
+                } else {
+                    throw new \Exception("Invalid Condition", 1);
+                }
+            } else {
+                if (is_numeric($condition) || is_bool($condition)) {
+                    $obj = $obj->where($key, $condition);
+                } elseif (is_string($condition)) {
+                    $obj = $obj->where($key, 'LIKE', $condition);
+                } else {
+                    throw new \Exception("Invalid Condition", 2);
+                }
+            }
+        }
+
+        return $obj;
+    }
+}

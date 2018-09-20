@@ -58,20 +58,34 @@ class {{{plural_uc}}}Controller extends Controller
      */
     public function list(Request $request)
     {
-        $r = $request->all();
+        try {
+            $r = $request->all();
 
-        ${{{plural}}} = count($r) > 0
-                        ? {{{singular_uc}}}::filter($r)->get()
-                        : {{{singular_uc}}}::all();
+            ${{{plural}}} = count($r) > 0
+                            ? {{{singular_uc}}}::filter($r)->get()
+                            : {{{singular_uc}}}::all();
 
-        $response = response()->json([
-            'response'=> [
-                'action' => 'list',
-                'status' => 200,
-                'msg' => 'success', 
-                '{{{plural}}}' => ${{{plural}}},
-            ]
-        ], 200);
+            $response = response()->json([
+                'response'=> [
+                    'action' => 'list',
+                    'status' => 200,
+                    'conditions' => $r,
+                    'msg' => 'success', 
+                    '{{{plural}}}' => ${{{plural}}},
+                ]
+            ], 200);
+
+        } catch(\Exception $e) {
+            $response = response()->json([
+                'response'=> [
+                    'action' => 'list',
+                    'status' => 422,
+                    'conditions' => $r,
+                    'msg' => 'fail', 
+                    'errors' => $e->getMessage(),
+                ]
+            ], 422);
+        }    
 
         return $response;
     }

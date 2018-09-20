@@ -774,20 +774,20 @@ class LumenCrudMakeCommand extends Command
 
         if ($type == 'model') {
             // Make the table object
-            $objTab = new \stdClass();
-            $objTab->singular = 'model';
-            $objTab->marks = ['namespace' => substr($this->pathModels,0,-1)];
-            $objTab->arqs = [
+            $objMod = new \stdClass();
+            $objMod->singular = 'model';
+            $objMod->marks = ['namespace' => substr($this->pathModels,0,-1)];
+            $objMod->arqs = [
                 $type => $this->getTemplate('baseModel'),
             ];
 
             foreach ($this->marks()[$type] as $mark){
-                $table->arqs[$type] = str_replace('{{{' . $mark . '}}}', 
-                                                        trim($table->marks[$mark]), 
-                                                        $table->arqs[$type]);
+                $objMod->arqs[$type] = str_replace('{{{' . $mark . '}}}', 
+                                                    trim($objMod->marks[$mark]), 
+                                                    $objMod->arqs[$type]);
             }
 
-            $this->createFile($type, $objTab);
+            $this->createFile($type, $objMod);
         }
 
         foreach ($this->tables as $key => $table) {

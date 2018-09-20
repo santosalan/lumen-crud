@@ -773,7 +773,7 @@ class LumenCrudMakeCommand extends Command
         $this->alert(strtoupper($type) . ' PROCESS');
 
         if ($type == 'model') {
-            // Make the table object
+            // Make the model object
             $objMod = new \stdClass();
             $objMod->singular = 'model';
             $objMod->marks = ['namespace' => substr($this->pathModels,0,-1)];
@@ -781,11 +781,9 @@ class LumenCrudMakeCommand extends Command
                 $type => $this->getTemplate('baseModel'),
             ];
 
-            foreach ($this->marks()[$type] as $mark){
-                $objMod->arqs[$type] = str_replace('{{{' . $mark . '}}}', 
-                                                    trim($objMod->marks[$mark]), 
-                                                    $objMod->arqs[$type]);
-            }
+            $objMod->arqs[$type] = str_replace('{{{namespace}}}', 
+                                                trim($objMod->marks[$mark]), 
+                                                $objMod->arqs[$type]);
 
             $this->createFile($type, $objMod);
         }

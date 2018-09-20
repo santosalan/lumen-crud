@@ -776,14 +776,11 @@ class LumenCrudMakeCommand extends Command
             // Make the model object
             $objMod = new \stdClass();
             $objMod->singular = 'model';
-            $objMod->marks = ['namespace' => substr($this->pathModels,0,-1)];
             $objMod->arqs = [
-                $type => $this->getTemplate('baseModel'),
+                $type => str_replace('{{{namespace}}}', 
+                                    trim(substr($this->pathModels,0,-1)), 
+                                    $this->getTemplate('baseModel')),
             ];
-
-            $objMod->arqs[$type] = str_replace('{{{namespace}}}', 
-                                                trim($objMod->marks[$mark]), 
-                                                $objMod->arqs[$type]);
 
             $this->createFile($type, $objMod);
         }

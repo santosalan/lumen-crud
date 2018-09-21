@@ -24,9 +24,17 @@ class Model extends EloquentModel
                 if (count($condition) == 1) {
                     $obj = $obj->where($key, $condition[0]);
                 } elseif (count($condition) == 2) {
-                    $obj = $obj->where($key, $condition[0], $condition[1]);
+                    if (strtolower(trim($condition[0])) === 'between') {
+                        $obj = $obj->whereBetween($key, $condition[1]);
+                    } else {
+                        $obj = $obj->where($key, $condition[0], $condition[1]);
+                    }
                 } elseif (count($condition) == 3) {
-                    $obj = $obj->where($key, $condition[0], $condition[1], $condition[2]);
+                    if (strtolower(trim($condition[0])) === 'between') {
+                        $obj = $obj->whereBetween($key, $condition[1], $condition[2]);
+                    } else {
+                        $obj = $obj->where($key, $condition[0], $condition[1], $condition[2]);
+                    }
                 } else {
                     throw new \Exception("Invalid " . strtoupper($key) . " condition", 1);
                 }

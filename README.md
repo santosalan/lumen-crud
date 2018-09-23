@@ -9,7 +9,7 @@
 ## See Tables
 > php artisan make:lumen-crud
 
-## Generate a Basic Lumen-CRUD examples
+## Generate a Basic Lumen-CRUD
 > php artisan make:lumen-crud --tables=[ all | table_number ] --path-models='App\Models\' --routes=[ y | n ]
 
 or

@@ -503,7 +503,7 @@ class LumenCrudMakeCommand extends Command
                                 . ucwords($t->singular) . "::pluck('" . $display . "', '" . $pk . "')" 
                                 . ",\n";
                     } else {
-                        $plucks .= "                    '" . $t->plural . "' => " 
+                        $plucks .= "                '" . $t->plural . "' => " 
                                 . ucwords($t->singular) . "::pluck('" . $display . "', '" . $pk . "')" 
                                 . ",\n";
                     }

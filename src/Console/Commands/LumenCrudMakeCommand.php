@@ -383,13 +383,15 @@ class LumenCrudMakeCommand extends Command
 
             return $type;
         };
+
+        list($pk, $display) = $this->getPkDisplay($table);
         
         $validator = $funcType();
         $validator .= $objField->size && in_array($objField->type, ['char','varchar','text']) 
                         ? '|max:' . $objField->size 
                         : '';
         $validator .= strpos($objField->name, 'email') !== false ? '|email' : '';
-        $validator .= $objField->unique ? '|unique:' . $table->name : '';
+        $validator .= $objField->unique ? '|unique:' . $table->name . ',' . $pk : '';
         $validator .= $objField->required ? '|required' : '';
 
         return $validator;

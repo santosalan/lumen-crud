@@ -4,6 +4,7 @@
 */
 $router->group(['prefix' => '{{{plural}}}'], function () use ($router) {
     $router->get('/', ['uses' => '{{{plural_uc}}}Controller@list']);
+    $router->get('plucks', ['uses' => '{{{plural_uc}}}Controller@plucks']);
     $router->post('create', ['uses' => '{{{plural_uc}}}Controller@create']);
     $router->get('{id}', ['uses' => '{{{plural_uc}}}Controller@read']);
     $router->put('{id}', ['uses' => '{{{plural_uc}}}Controller@update']);

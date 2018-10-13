@@ -38,14 +38,12 @@ class {{{plural_uc}}}Controller extends Controller
     public function plucks ()
     {
         $response = response()->json([
-            'response'=> [
-                'action' => 'plucks',
-                'status' => 200,
-                'msg' => 'success', 
-                'plucks' => [
-                    {{{plucks}}}
-                ],
-            ]
+            'action' => 'plucks',
+            'status' => 200,
+            'msg' => 'success', 
+            'plucks' => [
+                {{{plucks}}}
+            ],
         ], 200);
 
         return $response;
@@ -66,24 +64,20 @@ class {{{plural_uc}}}Controller extends Controller
                             : {{{singular_uc}}}::all();
 
             $response = response()->json([
-                'response'=> [
-                    'action' => 'list',
-                    'status' => 200,
-                    'conditions' => $r,
-                    'msg' => 'success', 
-                    '{{{plural}}}' => ${{{plural}}},
-                ]
+                'action' => 'list',
+                'status' => 200,
+                'conditions' => $r,
+                'msg' => 'success', 
+                '{{{plural}}}' => ${{{plural}}},
             ], 200);
 
         } catch(\Exception $e) {
             $response = response()->json([
-                'response'=> [
-                    'action' => 'list',
-                    'status' => 422,
-                    'conditions' => $r,
-                    'msg' => 'fail', 
-                    'errors' => $e->getMessage(),
-                ]
+                'action' => 'list',
+                'status' => 422,
+                'conditions' => $r,
+                'msg' => 'fail', 
+                'errors' => $e->getMessage(),
             ], 422);
         }    
 
@@ -105,33 +99,27 @@ class {{{plural_uc}}}Controller extends Controller
                 ${{{singular}}} = {{{singular_uc}}}::create($request->all());
 
                 $response = response()->json([
-                    'response'=> [
-                        'action' => 'create',
-                        'status' => 200,
-                        'msg' => 'success', 
-                        '{{{singular}}}' => ${{{singular}}},
-                    ]
+                    'action' => 'create',
+                    'status' => 200,
+                    'msg' => 'success', 
+                    '{{{singular}}}' => ${{{singular}}},
                 ], 200);
 
             } else {
                 $response = response()->json([
-                    'response'=> [
-                        'action' => 'create',
-                        'status' => 422,
-                        'msg' => 'fail', 
-                        'errors' => $valid->errors(),
-                    ]
+                    'action' => 'create',
+                    'status' => 422,
+                    'msg' => 'fail', 
+                    'errors' => $valid->errors(),
                 ], 422);
             }
 
         } catch(\Exception $e) {
             $response = response()->json([
-                'response'=> [
-                    'action' => 'create',
-                    'status' => 422,
-                    'msg' => 'fail', 
-                    'errors' => $e->getMessage(),
-                ]
+                'action' => 'create',
+                'status' => 422,
+                'msg' => 'fail', 
+                'errors' => $e->getMessage(),
             ], 422);
         }
 
@@ -151,33 +139,27 @@ class {{{plural_uc}}}Controller extends Controller
 
             if (! blank(${{{singular}}})) {            
                 $response = response()->json([
-                    'response'=> [
-                        'action' => 'read',
-                        'status' => 200,
-                        'msg' => 'success', 
-                        '{{{singular}}}' => ${{{singular}}},
-                    ]
+                    'action' => 'read',
+                    'status' => 200,
+                    'msg' => 'success', 
+                    '{{{singular}}}' => ${{{singular}}},
                 ], 200);
             } else {
                 $response = response()->json([
-                    'response'=> [
-                        'action' => 'read',
-                        'status' => 404,
-                        'msg' => 'fail', 
-                        'errors' => [
-                            '{{{singular}}}' => ['Not found'],
-                        ],
-                    ]
+                    'action' => 'read',
+                    'status' => 404,
+                    'msg' => 'fail', 
+                    'errors' => [
+                        '{{{singular}}}' => ['Not found'],
+                    ],
                 ], 404);
             }
         } catch(\Exception $e) {
             $response = response()->json([
-                'response'=> [
-                    'action' => 'read',
-                    'status' => 422,
-                    'msg' => 'fail', 
-                    'errors' => $e->getMessage(),
-                ]
+                'action' => 'read',
+                'status' => 422,
+                'msg' => 'fail', 
+                'errors' => $e->getMessage(),
             ], 422);
         }
 
@@ -203,46 +185,38 @@ class {{{plural_uc}}}Controller extends Controller
                     ${{{singular}}}->update($request->all());
                     
                     $response = response()->json([
-                        'response'=> [
-                            'action' => 'update',
-                            'status' => 200,
-                            'msg' => 'success', 
-                            '{{{singular}}}' => ${{{singular}}},
-                        ]
+                        'action' => 'update',
+                        'status' => 200,
+                        'msg' => 'success', 
+                        '{{{singular}}}' => ${{{singular}}},
                     ], 200);
 
                 } else {
                     $response = response()->json([
-                        'response'=> [
-                            'action' => 'update',
-                            'status' => 422,
-                            'msg' => 'fail', 
-                            'errors' => $valid->errors(),
-                        ]
+                        'action' => 'update',
+                        'status' => 422,
+                        'msg' => 'fail', 
+                        'errors' => $valid->errors(),
                     ], 422);
                 }
 
             } else {
                 $response = response()->json([
-                    'response'=> [
-                        'action' => 'update',
-                        'status' => 404,
-                        'msg' => 'fail', 
-                        'errors' => [
-                            '{{{singular}}}' => ['Not found'],
-                        ],
-                    ]
+                    'action' => 'update',
+                    'status' => 404,
+                    'msg' => 'fail', 
+                    'errors' => [
+                        '{{{singular}}}' => ['Not found'],
+                    ],
                 ], 404);
             }
 
         } catch(\Exception $e) {
             $response = response()->json([
-                'response'=> [
-                    'action' => 'update',
-                    'status' => 422,
-                    'msg' => 'fail', 
-                    'errors' => $e->getMessage(),
-                ]
+                'action' => 'update',
+                'status' => 422,
+                'msg' => 'fail', 
+                'errors' => $e->getMessage(),
             ], 422);
         }
 
@@ -266,34 +240,28 @@ class {{{plural_uc}}}Controller extends Controller
                 ${{{singular}}}->delete();
 
                 $response = response()->json([
-                    'response'=> [
-                        'action' => 'delete',
-                        'status' => 200,
-                        'msg' => 'success', 
-                        '{{{singular}}}' => $clone,
-                    ]
+                    'action' => 'delete',
+                    'status' => 200,
+                    'msg' => 'success', 
+                    '{{{singular}}}' => $clone,
                 ], 200);
                 
             } else {
                 $response = response()->json([
-                    'response'=> [
-                        'action' => 'delete',
-                        'status' => 404,
-                        'msg' => 'fail', 
-                        'errors' => [
-                            '{{{singular}}}' => ['Not found'],
-                        ],
-                    ]
+                    'action' => 'delete',
+                    'status' => 404,
+                    'msg' => 'fail', 
+                    'errors' => [
+                        '{{{singular}}}' => ['Not found'],
+                    ],
                 ], 404);
             }
         } catch(\Exception $e) {
             $response = response()->json([
-                'response'=> [
-                    'action' => 'delete',
-                    'status' => 422,
-                    'msg' => 'fail', 
-                    'errors' => $e->getMessage(),
-                ]
+                'action' => 'delete',
+                'status' => 422,
+                'msg' => 'fail', 
+                'errors' => $e->getMessage(),
             ], 422);
         }
 

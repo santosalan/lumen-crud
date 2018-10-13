@@ -384,7 +384,12 @@ class LumenCrudMakeCommand extends Command
             return $type;
         };
 
-        list($pk, $display) = $this->getPkDisplay($table);
+        // Get PK name
+        foreach ($table->fields as $f) {
+            if ($f->pk) {
+                $pk = $f->name;
+            }
+        }
         
         $validator = $funcType();
         $validator .= $objField->size && in_array($objField->type, ['char','varchar','text']) 

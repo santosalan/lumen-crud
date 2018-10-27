@@ -31,7 +31,7 @@ class LumenCrudMakeCommand extends Command
 
     /**
      * The path of Models
-     * 
+     *
      * @var string
      */
     private $pathModels = 'App\\';
@@ -67,10 +67,10 @@ class LumenCrudMakeCommand extends Command
     {
         $this->alert('ROUTES PROCESS');
 
-        // Verify option TABLE 
+        // Verify option TABLE
         if (in_array(strtoupper(trim($this->option('r'))), ['N','NO','FALSE']) || in_array(strtoupper(trim($this->option('routes'))), ['N','NO','FALSE'])) {
             $this->routes = false;
-        }   
+        }
 
     }
 
@@ -81,7 +81,7 @@ class LumenCrudMakeCommand extends Command
     public function processRoutes()
     {
         if ($this->routes) {
-            
+
             $template = $this->getTemplate('routes');
             $routes = '';
 
@@ -95,19 +95,19 @@ class LumenCrudMakeCommand extends Command
                     ];
 
                     $temp = $template;
-                    
+
                     foreach ($this->marks()['routes'] as $mark){
                         $temp = str_replace('{{{' . $mark . '}}}', trim($m[$mark]), $temp);
                     }
-                    
+
                     $routes .= $temp;
                 }
-                
-            
+
+
             } elseif (trim($this->option('t')) !== '' || trim($this->option('table')) !== '') {
-               
+
                 $tableKey = trim($this->option('t')) !== '' ? $this->option('t') : $this->option('table');
-                    
+
                 $table = $this->tables[$tableKey];
 
                 $m = [
@@ -116,21 +116,21 @@ class LumenCrudMakeCommand extends Command
                 ];
 
                 $temp = $template;
-                
+
                 foreach ($this->marks()['routes'] as $mark){
                     $temp = str_replace('{{{' . $mark . '}}}', trim($m[$mark]), $temp);
                 }
-                
+
                 $routes = $temp;
-                
-            }   
+
+            }
 
             $fileWeb = fopen(base_path() . '/routes/web.php', 'a+');
             fwrite($fileWeb, $routes);
             fclose($fileWeb);
         }
     }
-    
+
     /**
      * [processOptionPathModels description]
      * @return [type] [description]
@@ -139,10 +139,10 @@ class LumenCrudMakeCommand extends Command
     {
         $this->alert('PATH MODELS PROCESS');
 
-        // Verify option TABLE 
+        // Verify option TABLE
         if (trim($this->option('pm')) !== '' || trim($this->option('path-models')) !== '') {
             $this->pathModels = trim($this->option('pm')) !== '' ? str_finish($this->option('pm'), '\\') : str_finish($this->option('path-models'), '\\');
-        }   
+        }
 
     }
 
@@ -201,7 +201,7 @@ class LumenCrudMakeCommand extends Command
                     if ($t->name == $tab2) {
                         $rel2 = true;
                     }
-                }    
+                }
 
                 if ($rel1 && $rel2) {
                     foreach ($this->tables as $t) {
@@ -219,15 +219,15 @@ class LumenCrudMakeCommand extends Command
 
 
             }
-            
+
         }
 
         //dump($this->tables);
 
 
-        // Verify option TABLE 
+        // Verify option TABLE
         if (trim($this->option('t')) === '' && trim($this->option('table')) === '') {
-            
+
             $this->alert('TABLES');
             foreach ($this->tables as $tableKey => $table) {
                 $this->info($tableKey . '->' . $table->name);
@@ -238,8 +238,8 @@ class LumenCrudMakeCommand extends Command
             foreach ($this->tables as $tableKey => $table) {
                 $this->readTable($tableKey);
             }
-        }   
-           
+        }
+
         foreach ($this->tables as $table) {
             // Register hasMany and hasOne
             foreach ($this->tables as $t) {
@@ -266,12 +266,12 @@ class LumenCrudMakeCommand extends Command
         // DUMPS
         // if (trim($this->option('t')) === 'all' || trim($this->option('table')) === 'all') {
         //     dd($this->tables);
-            
+
         // } elseif (trim($this->option('t')) !== '' || trim($this->option('table')) !== '') {
         //     $tableKey = trim($this->option('t')) !== '' ? $this->option('t') : $this->option('table');
         //     dd($this->tables[$tableKey]);
         // }
-        
+
 
     }
 
@@ -298,11 +298,11 @@ class LumenCrudMakeCommand extends Command
 
             // Register BelongsTo
             if ($objField->fk) {
-                array_push($table->belongsTo, $objField->fk);    
+                array_push($table->belongsTo, $objField->fk);
             }
         }
 
-        
+
     }
 
 
@@ -314,7 +314,7 @@ class LumenCrudMakeCommand extends Command
     public function readField($field, $table)
     {
         $objField = new \stdClass();
-        
+
         //$this->alert($field->Field);
         preg_match('/[a-zA-Z]+/', $field->Type, $type);
         preg_match('/[0-9]+/', $field->Type, $size);
@@ -329,7 +329,7 @@ class LumenCrudMakeCommand extends Command
         $objField->pk = $field->Key === 'PRI' ? true : false;
         $objField->fk = empty($fk) ? (empty($fk2) ? false : Pluralizer::plural($fk2[1])) : Pluralizer::plural($fk[1]);
         $objField->display = false;
-        $objField->unique = $field->Key === 'UNI' ? true : false; 
+        $objField->unique = $field->Key === 'UNI' ? true : false;
         $objField->default = $field->Default;
         $objField->autoIncrement = strpos($field->Extra, 'auto_increment') !== false ? true : false;
         $objField->validator = $this->generateValidator($objField, $table);
@@ -348,7 +348,7 @@ class LumenCrudMakeCommand extends Command
                         'email'
                     ];
         if (!$table->fieldDisplay && in_array($objField->name, $displays)) {
-            $table->fieldDisplay = true; 
+            $table->fieldDisplay = true;
             $objField->display = true;
         }
 
@@ -362,12 +362,12 @@ class LumenCrudMakeCommand extends Command
      */
     public function generateValidator($objField, $table)
     {
-        
+
         // Get Field Type
-        $funcType = function () use ($objField) {        
+        $funcType = function () use ($objField) {
 
             switch ($objField->type) {
-                case 'int': 
+                case 'int':
                     $type = 'integer';
                     break;
 
@@ -390,17 +390,17 @@ class LumenCrudMakeCommand extends Command
                 $pk = $f->name;
             }
         }
-        
+
         $validator = $funcType();
-        $validator .= $objField->size && in_array($objField->type, ['char','varchar','text']) 
-                        ? '|max:' . $objField->size 
+        $validator .= $objField->size && in_array($objField->type, ['char','varchar','text'])
+                        ? '|max:' . $objField->size
                         : '';
         $validator .= strpos($objField->name, 'email') !== false ? '|email' : '';
         $validator .= $objField->unique ? '|unique:' . $table->name . ',' . $pk : '';
         $validator .= $objField->required ? '|required' : '';
 
         return $validator;
-        
+
     }
 
     /**
@@ -410,14 +410,14 @@ class LumenCrudMakeCommand extends Command
      * @return string      [description]
      */
     public function getTemplate($type)
-    {        
+    {
         $template = file_get_contents(__DIR__ . '/stubs/' . $type . '.stub');
 
         if ($template === false) {
             $this->error('CRUD Template [' . $type  . '] not found.');
             die;
         }
-       
+
        return $template;
     }
 
@@ -499,12 +499,12 @@ class LumenCrudMakeCommand extends Command
                     list($pk, $display) = $this->getPkDisplay($t);
 
                     if (empty($plucks)) {
-                        $plucks = "'" . $t->plural . "' => "  
-                                . ucwords($t->singular) . "::pluck('" . $display . "', '" . $pk . "')" 
+                        $plucks = "'" . $t->plural . "' => "
+                                . ucwords($t->singular) . "::pluck('" . $display . "', '" . $pk . "')"
                                 . ",\n";
                     } else {
-                        $plucks .= "                '" . $t->plural . "' => " 
-                                . ucwords($t->singular) . "::pluck('" . $display . "', '" . $pk . "')" 
+                        $plucks .= "                '" . $t->plural . "' => "
+                                . ucwords($t->singular) . "::pluck('" . $display . "', '" . $pk . "')"
                                 . ",\n";
                     }
                 }
@@ -539,7 +539,7 @@ class LumenCrudMakeCommand extends Command
                         'use Illuminate\Database\Eloquent\SoftDeletes;',
                         'use SoftDeletes;',
                     ];
-                    break;   
+                    break;
                 }
             }
 
@@ -582,9 +582,9 @@ class LumenCrudMakeCommand extends Command
                     continue;
                 }
 
-                $dates .= in_array(strtolower($f->type), ['date', 'datetime', 'timestamp']) 
+                $dates .= in_array(strtolower($f->type), ['date', 'datetime', 'timestamp'])
                             ? "'" . $f->name . "', "
-                            : '';    
+                            : '';
             }
 
             return $dates;
@@ -604,11 +604,11 @@ class LumenCrudMakeCommand extends Command
                 return 'id';
             };
 
-            $attr = $type === 'belongs' 
+            $attr = $type === 'belongs'
                     ? $objTable->belongsTo
-                    : ($type === 'many' 
+                    : ($type === 'many'
                         ? $objTable->hasMany
-                        : ($type === 'one' 
+                        : ($type === 'one'
                             ? $objTable->hasOne
                             : $objTable->belongsToMany));
 
@@ -692,7 +692,11 @@ class LumenCrudMakeCommand extends Command
                 'validators',
                 'plucks',
             ],
-            
+
+            'baseModel' => [
+                'namespace',
+            ],
+
             'model' => [
                 'plural_uc',
                 'plural',
@@ -730,7 +734,7 @@ class LumenCrudMakeCommand extends Command
                 'has_many',
                 'belongs_many',
             ],
-            
+
             'belongs' => [
                 'singular_uc',
                 'singular',
@@ -752,7 +756,7 @@ class LumenCrudMakeCommand extends Command
                 'use_model',
                 'primary_model',
             ],
-            
+
             'belongsMany' => [
                 'plural',
                 'singular_uc',
@@ -766,7 +770,7 @@ class LumenCrudMakeCommand extends Command
                 'plural_uc',
                 'plural',
             ],
-            
+
         ];
     }
 
@@ -775,7 +779,7 @@ class LumenCrudMakeCommand extends Command
      * @param  string $type [description]
      * @return [type]       [description]
      */
-    public function processFile(string $type) 
+    public function processFile(string $type)
     {
         $this->alert(strtoupper($type) . ' PROCESS');
 
@@ -784,8 +788,8 @@ class LumenCrudMakeCommand extends Command
             $objMod = new \stdClass();
             $objMod->singular = 'model';
             $objMod->arqs = [
-                $type => str_replace('{{{namespace}}}', 
-                                    trim(substr($this->pathModels,0,-1)), 
+                $type => str_replace('{{{namespace}}}',
+                                    trim(substr($this->pathModels,0,-1)),
                                     $this->getTemplate('baseModel')),
             ];
 
@@ -799,7 +803,7 @@ class LumenCrudMakeCommand extends Command
 
             if ($table->relationTable !== true && $type === 'pivot') {
                 continue;
-            }            
+            }
 
             if (trim($this->option('t')) !== 'all' && trim($this->option('table')) !== 'all') {
                 $tableKey = trim($this->option('t')) !== '' ? $this->option('t') : $this->option('table');
@@ -813,8 +817,8 @@ class LumenCrudMakeCommand extends Command
             ];
 
             foreach ($this->marks()[$type] as $mark){
-                $table->arqs[$type] = str_replace('{{{' . $mark . '}}}', 
-                                                        trim($table->marks[$mark]), 
+                $table->arqs[$type] = str_replace('{{{' . $mark . '}}}',
+                                                        trim($table->marks[$mark]),
                                                         $table->arqs[$type]);
             }
 
@@ -825,7 +829,7 @@ class LumenCrudMakeCommand extends Command
 
     /**
      * [createFile description]
-     * 
+     *
      * @param  string $type [description]
      * @param  string $arq  [description]
      * @return [type]       [description]
@@ -839,6 +843,7 @@ class LumenCrudMakeCommand extends Command
         $paths = [
             'controller' => base_path('app') . '/Http/Controllers/',
             'model' => base_path('app') . '/' . implode('/',$pathModels),
+            'baseModel' => base_path('app') . '/' . implode('/',$pathModels),
         ];
 
         // Name Arq
@@ -846,13 +851,16 @@ class LumenCrudMakeCommand extends Command
             $nameArq = '';
 
             switch ($t) {
-                case 'controller': 
+                case 'controller':
                     $nameArq = ucwords($objTable->plural) . 'Controller.php';
                     break;
 
-                case 'model': 
+                case 'model':
                     $nameArq = ucwords($objTable->singular) . '.php';
                     break;
+
+                case 'baseModel':
+                    $nameArq = 'Model.php';
 
                 default:
                     $nameArq = $t . '.php';
@@ -884,9 +892,12 @@ class LumenCrudMakeCommand extends Command
 
         // Process TABLES
         $this->processOptionTable();
-        
+
         // Process Controller
         $this->processFile('controller');
+
+        // Process Base Model
+        $this->processFile('baseModel');
 
         // Process Model
         $this->processFile('model');
@@ -894,6 +905,6 @@ class LumenCrudMakeCommand extends Command
         // Process Routes
         $this->processRoutes();
 
-        
+
     }
 }

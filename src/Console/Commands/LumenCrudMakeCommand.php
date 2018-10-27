@@ -20,14 +20,18 @@ class LumenCrudMakeCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'make:lumen-crud {--t=} {--table=} {--pm=} {--path-models=}  {--r=} {--routes=}';
+    protected $signature = 'make:lumen-crud
+                            {--t|table= : [all | table number] }
+                            {--p|path-models=App : Namespace to Models (Directories will be created) }
+                            {--r|routes=Y : [Y | N] }
+                            {--b|base-model=N : [Y | N] }';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a API CRUD';
+    protected $description = 'Create a Webservice REST - API CRUD';
 
     /**
      * The path of Models
@@ -68,7 +72,7 @@ class LumenCrudMakeCommand extends Command
         $this->alert('ROUTES PROCESS');
 
         // Verify option TABLE
-        if (in_array(strtoupper(trim($this->option('r'))), ['N','NO','FALSE']) || in_array(strtoupper(trim($this->option('routes'))), ['N','NO','FALSE'])) {
+        if (in_array(strtoupper(trim($this->option('routes'))), ['N','NO','FALSE'])) {
             $this->routes = false;
         }
 
@@ -86,7 +90,7 @@ class LumenCrudMakeCommand extends Command
             $routes = '';
 
 
-            if (trim($this->option('t')) === 'all' || trim($this->option('table')) === 'all') {
+            if (trim($this->option('table')) === 'all') {
 
                 foreach ($this->tables as $table) {
                     $m = [
@@ -104,9 +108,9 @@ class LumenCrudMakeCommand extends Command
                 }
 
 
-            } elseif (trim($this->option('t')) !== '' || trim($this->option('table')) !== '') {
+            } elseif (trim($this->option('table')) !== '') {
 
-                $tableKey = trim($this->option('t')) !== '' ? $this->option('t') : $this->option('table');
+                $tableKey = $this->option('table');
 
                 $table = $this->tables[$tableKey];
 
@@ -140,8 +144,8 @@ class LumenCrudMakeCommand extends Command
         $this->alert('PATH MODELS PROCESS');
 
         // Verify option TABLE
-        if (trim($this->option('pm')) !== '' || trim($this->option('path-models')) !== '') {
-            $this->pathModels = trim($this->option('pm')) !== '' ? str_finish($this->option('pm'), '\\') : str_finish($this->option('path-models'), '\\');
+        if (trim($this->option('path-models')) !== '') {
+            $this->pathModels = str_finish($this->option('path-models'), '\\');
         }
 
     }
@@ -226,7 +230,7 @@ class LumenCrudMakeCommand extends Command
 
 
         // Verify option TABLE
-        if (trim($this->option('t')) === '' && trim($this->option('table')) === '') {
+        if (trim($this->option('table')) === '') {
 
             $this->alert('TABLES');
             foreach ($this->tables as $tableKey => $table) {
@@ -264,11 +268,11 @@ class LumenCrudMakeCommand extends Command
 
 
         // DUMPS
-        // if (trim($this->option('t')) === 'all' || trim($this->option('table')) === 'all') {
+        // if (trim($this->option('table')) === 'all') {
         //     dd($this->tables);
 
-        // } elseif (trim($this->option('t')) !== '' || trim($this->option('table')) !== '') {
-        //     $tableKey = trim($this->option('t')) !== '' ? $this->option('t') : $this->option('table');
+        // } elseif (trim($this->option('table')) !== '') {
+        //     $tableKey = $this->option('table');
         //     dd($this->tables[$tableKey]);
         // }
 
@@ -693,10 +697,6 @@ class LumenCrudMakeCommand extends Command
                 'plucks',
             ],
 
-            'baseModel' => [
-                'namespace',
-            ],
-
             'model' => [
                 'plural_uc',
                 'plural',
@@ -783,7 +783,7 @@ class LumenCrudMakeCommand extends Command
     {
         $this->alert(strtoupper($type) . ' PROCESS');
 
-        if ($type == 'model') {
+        if ($type == 'model' && strtoupper($this->option('base-model')) == 'Y') {
             // Make the model object
             $objMod = new \stdClass();
             $objMod->singular = 'model';
@@ -805,8 +805,8 @@ class LumenCrudMakeCommand extends Command
                 continue;
             }
 
-            if (trim($this->option('t')) !== 'all' && trim($this->option('table')) !== 'all') {
-                $tableKey = trim($this->option('t')) !== '' ? $this->option('t') : $this->option('table');
+            if (trim($this->option('table')) !== 'all') {
+                $tableKey = $this->option('table');
                 if ((int) $tableKey !== (int) $key) {
                     continue;
                 }
@@ -843,7 +843,6 @@ class LumenCrudMakeCommand extends Command
         $paths = [
             'controller' => base_path('app') . '/Http/Controllers/',
             'model' => base_path('app') . '/' . implode('/',$pathModels),
-            'baseModel' => base_path('app') . '/' . implode('/',$pathModels),
         ];
 
         // Name Arq
@@ -858,9 +857,6 @@ class LumenCrudMakeCommand extends Command
                 case 'model':
                     $nameArq = ucwords($objTable->singular) . '.php';
                     break;
-
-                case 'baseModel':
-                    $nameArq = 'Model.php';
 
                 default:
                     $nameArq = $t . '.php';
@@ -895,9 +891,6 @@ class LumenCrudMakeCommand extends Command
 
         // Process Controller
         $this->processFile('controller');
-
-        // Process Base Model
-        $this->processFile('baseModel');
 
         // Process Model
         $this->processFile('model');

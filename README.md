@@ -4,6 +4,10 @@
 > php composer.phar require santosalan/lumen-crud
 
 ## Enable it in _bootstrap/app.php_
+> $app->withFacades();
+> $app->withEloquent();
+
+## Add it in _bootstrap/app.php_
 > $app->register(SantosAlan\LumenCrud\ServiceProvider::class);
 
 ## See Help

@@ -2,7 +2,7 @@
 /**
 * {{{plural_uc}}}
 */
-$router->group(['prefix' => '{{{plural}}}'], function () use ($router) {
+$router->group(['prefix' => '{{{kebab_plural}}}'], function () use ($router) {
     $router->get('/', ['uses' => '{{{plural_uc}}}Controller@list']);
     $router->get('plucks', ['uses' => '{{{plural_uc}}}Controller@plucks']);
     $router->post('create', ['uses' => '{{{plural_uc}}}Controller@create']);

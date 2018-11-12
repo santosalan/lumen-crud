@@ -18,6 +18,9 @@ class Model extends EloquentModel
         $model = static::class;
         $obj = new $model();
 
+        $pagination = $conditions['pagination'];
+        unset($conditions['pagination']);
+
         foreach ($conditions as $key => $condition) {
 
             if (is_array($condition)) {
@@ -49,6 +52,12 @@ class Model extends EloquentModel
                     throw new \Exception("Invalid " . strtoupper($key) . " condition", 2);
                 }
             }
+        }
+
+        if (! blank($pagination) && is_array($pagination)) {
+            $obj = $obj->paginate($pagination['limit'], ['*'], 'page', $pagination['page']);
+        } else {
+            $obj = $obj->paginate();
         }
 
         return $obj;

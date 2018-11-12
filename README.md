@@ -4,11 +4,45 @@
 > php composer.phar require santosalan/lumen-crud
 
 ## Enable it in _bootstrap/app.php_
-> $app->withFacades();
-> $app->withEloquent();
+```php
+$app->withFacades();
+$app->withEloquent();
+```
 
 ## Add it in _bootstrap/app.php_
-> $app->register(SantosAlan\LumenCrud\ServiceProvider::class);
+```php
+$app->register(SantosAlan\LumenCrud\ServiceProvider::class);
+```
+
+## Doctrine Inflectors - Irregular Plural and Singular 
+#### Create, if not exists, file _config/app.php_ and register this
+```php
+return [
+    /**
+     * Irregulares Words
+     */
+    'doctrine-inflector' => [
+        'plural' => [
+            'irregular' => [
+                'traducao' => 'traducoes',
+            ],
+        ],
+
+        'singular' => [
+            'irregular' => [
+                'traducoes' => 'traducao',
+            ],
+        ],
+    ],
+];
+```
+
+#### Add it in _bootstrap/app.php_ before _return $app;_
+```php
+$app->boot();
+Inflector::rules('plural', config('app.doctrine-inflector.plural'));
+Inflector::rules('singular', config('app.doctrine-inflector.singular'));
+```
 
 ## See Help
 > php artisan make:crud -h

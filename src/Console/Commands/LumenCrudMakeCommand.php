@@ -96,6 +96,7 @@ class LumenCrudMakeCommand extends Command
                     $m = [
                         'plural_uc' => ucwords($table->plural),
                         'plural' => $table->plural,
+                        'kebab_plural' => kebab_case($table->plural),
                     ];
 
                     $temp = $template;
@@ -167,14 +168,23 @@ class LumenCrudMakeCommand extends Command
                 continue;
             }
 
+            $prepareName = function ($name, $format) {
+                $name = explode('_', $name);
+                $name[count($name) - 1] = Pluralizer::{$format}(end($name));
+
+                return implode('_', $name);
+            };
+
             // Make the table object
             $objTab = new \stdClass();
             $objTab->name = $t->{'Tables_in_' . env('DB_DATABASE')};
             $objTab->relationTable = false;
-            $objTab->singular = Pluralizer::singular($objTab->name);
-            $objTab->plural = Pluralizer::plural($objTab->name);
+            $objTab->singular = camel_case($prepareName($objTab->name, 'singular'));
+            $objTab->plural = camel_case($prepareName($objTab->name, 'plural'));
+            $objTab->snakeSingular = snake_case($objTab->singular);
+            $objTab->snakePlural = snake_case($objTab->plural);
             $objTab->fieldDisplay = false;
-            $objTab->fk = $objTab->singular . '_id';
+            $objTab->fk = $objTab->snakeSingular . '_id';
             $objTab->fields = [];
             $objTab->belongsTo = [];
             $objTab->hasMany = [];
@@ -294,6 +304,8 @@ class LumenCrudMakeCommand extends Command
 
         $fields = DB::select('DESC ' . $table->name);
 
+        // dump($fields);
+
         //dump($fields);
         foreach ($fields as $f) {
             $objField = $this->readField($f, $table);
@@ -324,9 +336,16 @@ class LumenCrudMakeCommand extends Command
         preg_match('/[0-9]+/', $field->Type, $size);
         preg_match('/([a-zA-Z_0-9]+)_id/', $field->Field, $fk2);
 
+        $types = null;
+        if ($type[0] === 'enum') {
+            // dump($field->Type);
+            preg_match('/\([\'0-9,a-zA-Z]+\)/', $field->Type, $types);
+            $types = str_replace(['(', "'",')'], '', $types[0]);
+        }
 
         $objField->name = $field->Field;
         $objField->type = $type[0];
+        $objField->inTypes = $types;
         $objField->size = isset($size[0]) ? $size[0] : null;
         $objField->unsigned = strpos($field->Type, 'unsigned') !== false ? true : false;
         $objField->required = $field->Null === 'NO' ? true : false;
@@ -341,11 +360,11 @@ class LumenCrudMakeCommand extends Command
 
         $displays = [
                         'name',
-                        $table->singular . '_name',
-                        'name_' . $table->singular,
+                        $table->snakeSingular . '_name',
+                        'name_' . $table->snakeSingular,
                         'title',
-                        $table->singular . '_title',
-                        'title_' . $table->singular,
+                        $table->snakeSingular . '_title',
+                        'title_' . $table->snakeSingular,
                         'username',
                         'user',
                         'login',
@@ -378,6 +397,7 @@ class LumenCrudMakeCommand extends Command
                 case 'char':
                 case 'varchar':
                 case 'text':
+                case 'enum':
                     $type = 'string';
                     break;
 
@@ -396,6 +416,7 @@ class LumenCrudMakeCommand extends Command
         }
 
         $validator = $funcType();
+        $validator .= $objField->type === 'enum' ? '|in:' . $objField->inTypes : '';
         $validator .= $objField->size && in_array($objField->type, ['char','varchar','text'])
                         ? '|max:' . $objField->size
                         : '';
@@ -624,6 +645,7 @@ class LumenCrudMakeCommand extends Command
 
                     $m = [
                         'plural' => $t->plural,
+                        'kebab_plural' => kebab_case($t->plural),
                         'singular_uc' => ucwords($t->singular),
                         'singular' => $t->singular,
                         'use_model' => $this->pathModels . ucwords($t->singular),
@@ -651,10 +673,14 @@ class LumenCrudMakeCommand extends Command
         // MARKS TO REPLACE
         $marks = [
             // GERAL
+            'table_name' => $objTable->name,
             'plural_uc' => ucwords($objTable->plural),
             'plural' => $objTable->plural,
+            'kebab_plural' => kebab_case($objTable->plural),
+            'snake_plural' => $objTable->snakePlural,
             'singular_uc' => ucwords($objTable->singular),
             'singular' => $objTable->singular,
+            'snake_singular' => $objTable->snakeSingular,
 
             // Controller
             'uses' => $prepareUses(),
@@ -690,6 +716,7 @@ class LumenCrudMakeCommand extends Command
             'controller' => [
                 'plural_uc',
                 'plural',
+                'kebab_plural',
                 'singular_uc',
                 'singular',
                 'uses',
@@ -698,8 +725,10 @@ class LumenCrudMakeCommand extends Command
             ],
 
             'model' => [
+                'table_name',
                 'plural_uc',
                 'plural',
+                'snake_plural',
                 'singular_uc',
                 'singular',
                 'namespace',
@@ -767,6 +796,7 @@ class LumenCrudMakeCommand extends Command
             ],
 
             'routes' => [
+                'kebab_plural',
                 'plural_uc',
                 'plural',
             ],

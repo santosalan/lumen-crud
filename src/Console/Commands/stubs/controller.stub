@@ -59,9 +59,7 @@ class {{{plural_uc}}}Controller extends Controller
         try {
             $r = $request->all();
 
-            ${{{plural}}} = count($r) > 0
-                            ? {{{singular_uc}}}::filter($r)->get()
-                            : {{{singular_uc}}}::all();
+            ${{{plural}}} = {{{singular_uc}}}::filter($r);                            
 
             $response = response()->json([
                 'action' => 'list',

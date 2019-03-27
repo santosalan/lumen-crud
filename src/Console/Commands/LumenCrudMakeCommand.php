@@ -118,6 +118,7 @@ class LumenCrudMakeCommand extends Command
                 $m = [
                     'plural_uc' => ucwords($table->plural),
                     'plural' => $table->plural,
+                    'kebab_plural' => kebab_case($table->plural),
                 ];
 
                 $temp = $template;

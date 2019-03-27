@@ -14,7 +14,7 @@ $app->withEloquent();
 $app->register(SantosAlan\LumenCrud\ServiceProvider::class);
 ```
 
-## Doctrine Inflectors - Irregular Plural and Singular 
+## Doctrine Inflectors - Irregular Plural and Singular
 #### Create, if not exists, file _config/app.php_ and register this
 ```php
 return [
@@ -45,7 +45,7 @@ Inflector::rules('singular', config('app.doctrine-inflector.singular'));
 ```
 
 ## See Help
-> php artisan make:crud -h
+> php artisan make:lumen-crud -h
 
 ## See Tables
 > php artisan make:lumen-crud

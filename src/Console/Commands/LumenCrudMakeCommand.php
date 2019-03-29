@@ -818,6 +818,15 @@ class LumenCrudMakeCommand extends Command
                 'relation_table',
             ],
 
+            'syncRelationships' => [
+                'plural_uc',
+                'plural',
+            ],
+
+            'relationships' => [
+                'plural',
+            ],
+
             'routes' => [
                 'kebab_plural',
                 'plural_uc',

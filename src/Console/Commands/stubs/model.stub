@@ -70,5 +70,24 @@ class {{{singular_uc}}} extends Model
     {{{has_one}}}
     {{{has_many}}}
     {{{belongs_many}}}
-    
+
+    /**
+     * syncRelationships
+     */
+    public function syncRelationships(Array $data)
+    {
+        {{{sync_relationships}}}
+    }
+
+    /**
+     * Relationships
+     */
+    public function relationships()
+    {
+        $this->relationships = [
+            {{{relationships}}}
+        ];
+
+        return $this;
+    }
 }

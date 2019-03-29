@@ -630,13 +630,30 @@ class LumenCrudMakeCommand extends Command
                 return 'id';
             };
 
-            $attr = $type === 'belongs'
-                    ? $objTable->belongsTo
-                    : ($type === 'many'
-                        ? $objTable->hasMany
-                        : ($type === 'one'
-                            ? $objTable->hasOne
-                            : $objTable->belongsToMany));
+            $attr = [];
+            switch ($type) {
+                case 'belongs':
+                    $attr = $objTable->belongsTo;
+                    break;
+
+                case 'many':
+                    $attr = $objTable->hasMany;
+                    break;
+
+                case 'one':
+                    $attr = $objTable->hasOne;
+                    break;
+
+                case 'belongsMany':
+                case 'syncRelationships':
+                    $attr = $objTable->belongsToMany;
+                    break;
+
+                case 'relationships':
+                    $attr = array_merge($objTable->hasMany, $objTable->belongsToMany);
+
+            }
+
 
             foreach ($attr as $key => $item) {
                 foreach ($this->tables as $t) {
@@ -646,6 +663,7 @@ class LumenCrudMakeCommand extends Command
 
                     $m = [
                         'plural' => $t->plural,
+                        'plural_uc' => ucwords($t->plural),
                         'kebab_plural' => kebab_case($t->plural),
                         'singular_uc' => ucwords($t->singular),
                         'singular' => $t->singular,
@@ -702,6 +720,8 @@ class LumenCrudMakeCommand extends Command
             'has_one' => $prepareSubTemplates('one'),
             'has_many' => $prepareSubTemplates('many'),
             'belongs_many' => $prepareSubTemplates('belongsMany'),
+            'sync_relationships' => $prepareSubTemplates('syncRelationships'),
+            'relationships' => $prepareSubTemplates('relationships'),
         ];
 
         return $marks;
@@ -745,6 +765,8 @@ class LumenCrudMakeCommand extends Command
                 'has_one',
                 'has_many',
                 'belongs_many',
+                'sync_relationships',
+                'relationships',
             ],
 
             'pivot' => [
